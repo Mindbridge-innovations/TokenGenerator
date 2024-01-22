@@ -17,7 +17,7 @@ const firebaseConfig = {
 const firebaseApp = initializeApp(firebaseConfig);
 const db = getDatabase(firebaseApp);
 const uid = new ShortUniqueId({ length: 6 });
-const port = 3000;
+const port = process.env.PORT || 3000;
 
 const app = express();
 
