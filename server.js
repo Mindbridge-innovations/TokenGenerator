@@ -1,16 +1,17 @@
-import { getDatabase, ref, set, once } from "firebase/database";
-import { initializeApp } from "firebase/app";
-import ShortUniqueId from 'short-unique-id';
-import express from 'express';
+const { getDatabase, ref, set, get } = require("firebase/database");
+const { initializeApp } = require("firebase/app");
+const ShortUniqueId = require('short-unique-id');
+const express = require('express');
+require('dotenv').config();
 
 const firebaseConfig = {
- apiKey: "AIzaSyDsqhCTlhHCBBPGVWHC8V2VdI0Gr26YupY",
- authDomain: "unityapp-e903b.firebaseapp.com",
- databaseURL: "https://unityapp-e903b-default-rtdb.firebaseio.com",
- projectId: "unityapp-e903b",
- storageBucket: "unityapp-e903b.appspot.com",
- messagingSenderId: "572778167218",
- appId: "1:572778167218:web:1e96a54b61ee550501c2ab"
+  apiKey: process.env.FIREBASE_API_KEY,
+  authDomain: process.env.FIREBASE_AUTH_DOMAIN,
+  databaseURL: process.env.FIREBASE_DATABASE_URL,
+  projectId: process.env.FIREBASE_PROJECT_ID,
+  storageBucket: process.env.FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: process.env.FIREBASE_MESSAGING_SENDER_ID,
+  appId: process.env.FIREBASE_APP_ID
 };
 
 const firebaseApp = initializeApp(firebaseConfig);
@@ -23,7 +24,9 @@ const app = express();
 app.get('/generateToken', (req, res) => {
     let token = uid.randomUUID();
     const tokenRef = ref(db, 'tokens/' + token);
-    once(tokenRef, 'value').then((snapshot) => {
+
+    // Use get instead of once
+    get(tokenRef).then((snapshot) => {
         if (!snapshot.exists()) {
             set(tokenRef, {
                 token: token
