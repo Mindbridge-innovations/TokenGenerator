@@ -29,7 +29,8 @@ app.get('/generateToken', (req, res) => {
     get(tokenRef).then((snapshot) => {
         if (!snapshot.exists()) {
             set(tokenRef, {
-                token: token
+                token: token,
+                isActive: true
             }).then(() => {
                 res.send({ token: token });
             });
